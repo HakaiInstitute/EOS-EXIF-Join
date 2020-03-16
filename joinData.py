@@ -48,9 +48,15 @@ class joinData_Form(QtWidgets.QWidget, joinData_gui.Ui_Form):
         outFile = QtWidgets.QFileDialog.getSaveFileName(
             self, 'Save As...', '', "*.txt")
 
-        ortho_renamer = OrthoRenamer()
-        ortho_renamer.join_eos_exif_and_write_output(
-            self.EOS_FILE, self.EXIF_FILE, outFile[0], self.separator)
+        try:
+            ortho_renamer = OrthoRenamer()
+            ortho_renamer.join_eos_exif_and_write_output(
+                self.EOS_FILE, self.EXIF_FILE, outFile[0], self.separator)
+        except Exception as e:
+            print(e)
+            error_dialog = QtWidgets.QErrorMessage()
+            error_dialog.showMessage(str(e))
+            error_dialog.exec_()
 
 
 app = QtWidgets.QApplication(sys.argv)
