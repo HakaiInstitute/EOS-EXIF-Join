@@ -7,52 +7,25 @@
     <x>0</x>
     <y>0</y>
     <width>700</width>
-    <height>157</height>
+    <height>202</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>Data Join</string>
   </property>
-  <widget class="QTextEdit" name="eospath">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>40</y>
-     <width>391</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="verticalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOff</enum>
-   </property>
-   <property name="horizontalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOff</enum>
-   </property>
-  </widget>
-  <widget class="QTextEdit" name="exifpath">
-   <property name="geometry">
-    <rect>
-     <x>40</x>
-     <y>100</y>
-     <width>391</width>
-     <height>31</height>
-    </rect>
-   </property>
-   <property name="verticalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOff</enum>
-   </property>
-   <property name="horizontalScrollBarPolicy">
-    <enum>Qt::ScrollBarAlwaysOff</enum>
-   </property>
-  </widget>
   <widget class="QPushButton" name="loadEOS">
    <property name="geometry">
     <rect>
      <x>440</x>
      <y>40</y>
-     <width>93</width>
+     <width>101</width>
      <height>28</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Load EOS</string>
@@ -63,9 +36,14 @@
     <rect>
      <x>440</x>
      <y>100</y>
-     <width>93</width>
+     <width>101</width>
      <height>28</height>
     </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
    </property>
    <property name="text">
     <string>Load EXIF</string>
@@ -80,8 +58,69 @@
      <height>28</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
    <property name="text">
     <string>Join</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label">
+   <property name="geometry">
+    <rect>
+     <x>260</x>
+     <y>150</y>
+     <width>121</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>Header Offset</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="headerOffset">
+   <property name="geometry">
+    <rect>
+     <x>390</x>
+     <y>149</y>
+     <width>41</width>
+     <height>31</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="text">
+    <string>39</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="eospath">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>39</y>
+     <width>391</width>
+     <height>31</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="exifpath">
+   <property name="geometry">
+    <rect>
+     <x>40</x>
+     <y>100</y>
+     <width>391</width>
+     <height>31</height>
+    </rect>
    </property>
   </widget>
  </widget>

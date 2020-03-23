@@ -13,13 +13,13 @@ class OrthoRenamer(object):
             raise ValueError("Can't parse float from: " + str)
         return sides[0] + '.' + sides[1][0:decimals]
 
-    def read_eos_file(self, filename):
+    def read_eos_file(self, filename, headerOffset = 39):
         '''
         Reads the EoS file
         returns list if lists
         EoS file uses tab separators
         '''
-        EOS_FIRST_LINE = 39
+        EOS_FIRST_LINE = headerOffset
 
         with open(filename) as f:
             return list(filter(lambda y: len(y),
@@ -102,9 +102,9 @@ class OrthoRenamer(object):
         return "\n".join([separator.join(list) for list in list_2d])
 
     def join_eos_exif_and_write_output(self, eos_filename, exif_filename,
-                                       output_filename, separator="\t"):
+                                       output_filename, separator="\t", headerOffset = 39):
         # skip some header lines in eos file
-        eos = self.read_eos_file(eos_filename)
+        eos = self.read_eos_file(eos_filename, headerOffset)
         exif = self.read_exif_file(exif_filename)
         joined = self.join_eos_exif_lists(eos, exif)
         final_csv_lines = self.list_2d_to_string(joined, separator)

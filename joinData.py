@@ -60,7 +60,7 @@ class joinData_Form(QtWidgets.QWidget, joinData_gui.Ui_Form):
             with redirect_stdout(f):
                 ortho_renamer = OrthoRenamer()
                 ortho_renamer.join_eos_exif_and_write_output(
-                    self.EOS_FILE, self.EXIF_FILE, outFile[0], self.separator)
+                    self.EOS_FILE, self.EXIF_FILE, outFile[0], self.separator, int(self.headerOffset.text()))
 
             out = f.getvalue()
             self.showMessage(out, 'Join output')
