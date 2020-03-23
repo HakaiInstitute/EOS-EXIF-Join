@@ -58,7 +58,7 @@ class OrthoRenamer(object):
                 print(exif_line)
                 continue
             match = ''
-            eof_time = exif_line[3].split(':')[1]
+            exif_time = exif_line[3].split(':')[1]
 
             exif_filename = exif_line[0]
             # find matching time in EoS
@@ -69,13 +69,18 @@ class OrthoRenamer(object):
 
                 eos_time = eos_line[1]
 
-                # Crash if can't parse floats
-                float(eof_time)
-                float(eos_time)
+                # Skip line if can't parse floats
+                # This could be the XXXXXX.XXXXXX time situation or
+                # multiple CSV headers situation
+                try:
+                    float(exif_time)
+                    float(eos_time)
+                except Exception as e:
+                    continue
 
                 # truncate either time to 3 decimal places and match
                 if (self.truncate_float_str(eos_time, MAX_DECIMALS) ==
-                        self.truncate_float_str(eof_time, MAX_DECIMALS)):
+                        self.truncate_float_str(exif_time, MAX_DECIMALS)):
                     new_filename = exif_filename[:-4] + '_rgbi.tif'
                     joined = [new_filename, eos_line[2], eos_line[3],
                               eos_line[4], eos_line[5], eos_line[6],
