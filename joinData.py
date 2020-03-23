@@ -10,7 +10,7 @@ class joinData_Form(QtWidgets.QWidget, joinData_gui.Ui_Form):
 
     def __init__(self, parent=None):
 
-        super(joinData_Form, self).__init__(parent)
+        super().__init__()
 
         self.setupUi(self)
 
