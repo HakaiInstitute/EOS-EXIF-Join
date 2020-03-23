@@ -8,6 +8,9 @@ class OrthoRenamer(object):
 
     def truncate_float_str(self, str, decimals):
         sides = str.split('.')
+        # Not sure if this case can occur
+        if len(sides) != 2:
+            raise ValueError("Can't parse float from: " + str)
         return sides[0] + '.' + sides[1][0:decimals]
 
     def read_eos_file(self, filename):
@@ -19,7 +22,9 @@ class OrthoRenamer(object):
         EOS_FIRST_LINE = 39
 
         with open(filename) as f:
-            return list(map(lambda x: x.split(), f.readlines()[EOS_FIRST_LINE:]))
+            return list(filter(lambda y: len(y),
+                               map(lambda x: x.split(),
+                                   f.readlines()[EOS_FIRST_LINE:])))
 
     def read_exif_file(self, filename):
         '''
@@ -35,7 +40,7 @@ class OrthoRenamer(object):
         '''
         returns  list of lists
         '''
-        # truncate times to 3 decimals to match them, eg 123.4567 becomes 123.456
+        # truncate times to 3 decimals to match them, eg 123.4567 -> 123.456
         MAX_DECIMALS = 3
 
         final_csv_header = ['CIR_Filena', 'Easting',
@@ -49,18 +54,32 @@ class OrthoRenamer(object):
 
         # Go through each line in exif, find match eos time
         for exif_line in exif:
+            if len(exif_line) < 4:
+                print(exif_line)
+                continue
             match = ''
             eof_time = exif_line[3].split(':')[1]
 
             exif_filename = exif_line[0]
             # find matching time in EoS
             for eos_line in eos:
+                if len(eos_line) < 4:
+                    print(eos_line)
+                    continue
+
                 eos_time = eos_line[1]
+
+                # Crash if can't parse floats
+                float(eof_time)
+                float(eos_time)
+
                 # truncate either time to 3 decimal places and match
-                if self.truncate_float_str(eos_time, MAX_DECIMALS) == self.truncate_float_str(eof_time, MAX_DECIMALS):
+                if (self.truncate_float_str(eos_time, MAX_DECIMALS) ==
+                        self.truncate_float_str(eof_time, MAX_DECIMALS)):
                     new_filename = exif_filename[:-4] + '_rgbi.tif'
                     joined = [new_filename, eos_line[2], eos_line[3],
-                              eos_line[4], eos_line[5], eos_line[6], eos_line[7]]
+                              eos_line[4], eos_line[5], eos_line[6],
+                              eos_line[7]]
                     match = joined
                     pass
             if match:
@@ -77,7 +96,8 @@ class OrthoRenamer(object):
     def list_2d_to_string(self, list_2d, separator):
         return "\n".join([separator.join(list) for list in list_2d])
 
-    def join_eos_exif_and_write_output(self, eos_filename, exif_filename, output_filename, separator):
+    def join_eos_exif_and_write_output(self, eos_filename, exif_filename,
+                                       output_filename, separator="\t"):
         # skip some header lines in eos file
         eos = self.read_eos_file(eos_filename)
         exif = self.read_exif_file(exif_filename)
