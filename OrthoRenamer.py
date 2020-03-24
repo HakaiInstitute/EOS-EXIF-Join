@@ -43,8 +43,8 @@ class OrthoRenamer(object):
         # truncate times to 3 decimals to match them, eg 123.4567 -> 123.456
         MAX_DECIMALS = 3
 
-        final_csv_header = ['CIR_Filena', 'Easting',
-                            'Northing', 'Ellips', 'Omega', 'Phi', 'Kappa']
+        final_csv_header = ['CIR_Filena', 'Lon',
+                            'Lat', 'Ellips', 'Omega', 'Phi', 'Kappa']
         final_csv_lines = [final_csv_header]
 
         num_matched = 0
@@ -82,7 +82,7 @@ class OrthoRenamer(object):
                 if (self.truncate_float_str(eos_time, MAX_DECIMALS) ==
                         self.truncate_float_str(exif_time, MAX_DECIMALS)):
                     new_filename = exif_filename[:-4] + '_rgbi.tif'
-                    joined = [new_filename, eos_line[2], eos_line[3],
+                    joined = [new_filename, eos_line[8], eos_line[9],
                               eos_line[4], eos_line[5], eos_line[6],
                               eos_line[7]]
                     match = joined
