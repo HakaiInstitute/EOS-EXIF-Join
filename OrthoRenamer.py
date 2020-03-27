@@ -4,7 +4,12 @@
 
 
 class OrthoRenamer(object):
-    pass
+    
+    def __init__(self):
+        
+        self.errors = []
+        
+        self.coordType = "Geographic"
 
     def truncate_float_str(self, str, decimals):
         sides = str.split('.')
@@ -40,11 +45,18 @@ class OrthoRenamer(object):
         '''
         returns  list of lists
         '''
+        
         # truncate times to 3 decimals to match them, eg 123.4567 -> 123.456
         MAX_DECIMALS = 3
-
-        final_csv_header = ['CIR_Filena', 'Lon',
-                            'Lat', 'Ellips', 'Omega', 'Phi', 'Kappa']
+        
+        if self.coordType == "Geographic":
+            
+            final_csv_header = ['CIR_Filena', 'Lon', 'Lat', 'Ellips', 'Omega', 'Phi', 'Kappa']
+            
+        else:
+            
+            final_csv_header = ['CIR_Filena', 'Northing', 'Easting', 'Ellips', 'Omega', 'Phi', 'Kappa']
+            
         final_csv_lines = [final_csv_header]
 
         num_matched = 0
@@ -82,9 +94,19 @@ class OrthoRenamer(object):
                 if (self.truncate_float_str(eos_time, MAX_DECIMALS) ==
                         self.truncate_float_str(exif_time, MAX_DECIMALS)):
                     new_filename = exif_filename[:-4] + '_rgbi.tif'
-                    joined = [new_filename, eos_line[8], eos_line[9],
-                              eos_line[4], eos_line[5], eos_line[6],
-                              eos_line[7]]
+                    
+                    if self.coordType == "Geographic":
+                        
+                        joined = [new_filename, eos_line[9], eos_line[8],
+                                  eos_line[4], eos_line[5], eos_line[6], 
+                                  eos_line[7]]
+                        
+                    else:
+                        
+                        joined = [new_filename, eos_line[3], eos_line[2],
+                                  eos_line[4], eos_line[5], eos_line[6], 
+                                  eos_line[7]]
+                        
                     match = joined
                     pass
             if match:
@@ -92,6 +114,7 @@ class OrthoRenamer(object):
                 num_matched += 1
             else:
                 print('No match found for file ' + exif_filename)
+                self.errors.append("No match found for file \t %s" % exif_filename)
                 num_not_matched += 1
 
         print("Matched records: " + str(num_matched))
