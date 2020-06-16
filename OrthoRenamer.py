@@ -55,7 +55,7 @@ class OrthoRenamer(object):
             
         else:
             
-            final_csv_header = ['CIR_Filena', 'Northing', 'Easting', 'Ellips', 'Omega', 'Phi', 'Kappa']
+            final_csv_header = ['CIR_Filena', 'Easting', 'Northing', 'Ellips', 'Omega', 'Phi', 'Kappa']
             
         final_csv_lines = [final_csv_header]
 
@@ -103,7 +103,7 @@ class OrthoRenamer(object):
                         
                     else:
                         
-                        joined = [new_filename, eos_line[3], eos_line[2],
+                        joined = [new_filename, eos_line[2], eos_line[3],
                                   eos_line[4], eos_line[5], eos_line[6], 
                                   eos_line[7]]
                         
