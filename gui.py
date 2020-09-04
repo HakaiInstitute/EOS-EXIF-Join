@@ -8,11 +8,25 @@ from PyQt5 import QtGui, QtWidgets, uic
 from core.OrthoRenamer import GeographicOrthoRenamer, UTMOrthoRenamer
 
 
+def resource_path(relative_path):
+    """
+    Define function to import external files when using PyInstaller.
+    Get absolute path to resource, works for dev and for PyInstaller
+    """
+    if hasattr(sys, "_MEIPASS"):
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    else:
+        base_path = os.path.abspath(".")
+
+    return os.path.join(base_path, relative_path)
+
+
 class JoinDataForm(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
 
-        uic.loadUi('joinData.ui', self)
+        uic.loadUi(resource_path('gui.ui'), self)
         self.show()
 
         self.btn_load_eos.clicked.connect(self.get_eos_filepath)
@@ -72,7 +86,7 @@ class JoinDataForm(QtWidgets.QWidget):
 
                 # Create the joined file
                 ortho_renamer(self.eos_path, self.exif_path, out_path, self.separator)
-                self.write_list(ortho_renamer.errors)
+                self.write_list([f"No match found for file \t{fn}" for fn in ortho_renamer.errors])
 
             out = out_stream.getvalue()
             self.update_log(out)

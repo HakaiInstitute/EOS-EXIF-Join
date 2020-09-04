@@ -83,7 +83,6 @@ class OrthoRenamer(ABC):
         # Populate the errors list
         unmatched_exif = exif[(~exif['Filename'].isin(joined['Filename']))]
         self.errors = list(unmatched_exif['Filename'])
-        self.errors = [f"No match found for file \t{fn}" for fn in self.errors]
 
         # Print some info
         num_matched = len(joined)
@@ -92,8 +91,8 @@ class OrthoRenamer(ABC):
         self.log(f"Matched records: {num_matched}")
         self.log(f"Unmatched records: {num_not_matched}")
 
-        for e in self.errors:
-            self.log(e)
+        for fn in self.errors:
+            self.log(f"No match found for file \t{fn}")
 
         return joined
 
