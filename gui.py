@@ -39,7 +39,7 @@ class JoinDataForm(QtWidgets.QWidget):
         self.separator = "\t"
 
     @property
-    def coord(self):
+    def coord_type(self):
         return str(self.combo_coord_type.currentText())
 
     @staticmethod
@@ -79,7 +79,7 @@ class JoinDataForm(QtWidgets.QWidget):
 
         try:
             with redirect_stdout(out_stream := io.StringIO()):
-                if self.coord == "Geographic":
+                if self.coord_type == "Geographic":
                     ortho_renamer = GeographicOrthoRenamer()
                 else:
                     ortho_renamer = UTMOrthoRenamer()
