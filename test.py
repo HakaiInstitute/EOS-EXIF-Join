@@ -9,11 +9,11 @@ eg sample_files/2/eov.txt and sample_files/2/exif.csv
 
 
 '''
-from OrthoRenamer import OrthoRenamer
+from core.OrthoRenamer import UTMOrthoRenamer
 import os
 import glob
 sample_files_folder = 'sample_files'
-ortho_renamer = OrthoRenamer()
+ortho_renamer = UTMOrthoRenamer()
 
 for folder_name in os.listdir(sample_files_folder):
     folder_prefix = sample_files_folder + '/' + folder_name

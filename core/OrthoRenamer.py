@@ -66,7 +66,6 @@ class OrthoRenamer(ABC):
         returns list of lists
         """
         # Truncate EOS Times
-        eos.astype({'TIME (s)': float})
         eos['TIME (s)'] = pd.to_numeric(eos['TIME (s)'], errors='coerce', downcast='float').dropna()
         eos['TIME (s)'] = self.truncate_float(eos['TIME (s)'])
 
@@ -113,18 +112,17 @@ class OrthoRenamer(ABC):
     def dataframe_columns_to_output(self) -> list:
         return list(self.csv2df_map.values())
 
-    def join_eos_exif_and_write_output(self, eos_filename: str, exif_filename: str,
-                                       output_filename: str, separator: str = "\t"):
+    def join_eos_exif_and_write_output(self, eos_path: str, exif_path: str, output_path: str, separator: str = ","):
         # skip some header lines in eos file
-        eos = self.read_eos_file(eos_filename)
-        exif = self.read_exif_file(exif_filename)
+        eos = self.read_eos_file(eos_path)
+        exif = self.read_exif_file(exif_path)
         joined = self.join_eos_exif_data(eos, exif)
 
         # Create a dataframe with just the output data and write it to file
         csv_data = joined[self.dataframe_columns_to_output]
         csv_data.columns = self.output_csv_column_names
-        csv_data.to_csv(output_filename, sep=separator, index=False)
-        self.log("Wrote " + output_filename)
+        csv_data.to_csv(output_path, sep=separator, index=False)
+        self.log("Wrote " + output_path)
 
     def __call__(self, *args, **kwargs):
         """Call self.join_eos_exif_and_write_output when instance is called."""

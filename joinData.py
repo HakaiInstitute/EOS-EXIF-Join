@@ -1,112 +1,87 @@
-import joinData_gui
-from PyQt5 import QtCore, QtWidgets, QtGui
-import sys
-from OrthoRenamer import OrthoRenamer
-from contextlib import redirect_stdout
 import io
 import os
+import sys
+from contextlib import redirect_stdout
 
-class joinData_Form(QtWidgets.QWidget, joinData_gui.Ui_Form):
+from PyQt5 import QtGui, QtWidgets, uic
 
-    def __init__(self, parent=None):
+from core.OrthoRenamer import GeographicOrthoRenamer, UTMOrthoRenamer
 
+
+class JoinDataForm(QtWidgets.QWidget):
+    def __init__(self):
         super().__init__()
 
-        self.setupUi(self)
+        uic.loadUi('joinData.ui', self)
+        self.show()
 
-        self.loadEOS.clicked.connect(self.get_eos_filepath)
-        self.loadEXIF.clicked.connect(self.get_exif_filepath)
-        self.join.clicked.connect(self.joinData)
+        self.btn_load_eos.clicked.connect(self.get_eos_filepath)
+        self.btn_load_exif.clicked.connect(self.get_exif_filepath)
+        self.btn_join.clicked.connect(self.join_data)
 
-        self.EOS_FILE = None
-        self.EXIF_FILE = None
-        
-        self.no_matches = []
+        self.eos_path = None
+        self.exif_path = None
 
         self.separator = "\t"
-        
-        self.coord = str(self.coordType.currentText())
-        
-    def writeList(self, listItem):
-        
-        with open('log.txt', 'w') as listExport:
-            
-            listExport.writelines("%s\n" % x for x in listItem)
-        
-    def updateLog(self, text):
-        
-        self.logView.insertPlainText(">> " + text + "\n")
-        
-        self.logView.moveCursor(QtGui.QTextCursor.End)
+
+    @property
+    def coord(self):
+        return str(self.combo_coord_type.currentText())
+
+    @staticmethod
+    def write_list(list_item):
+        with open('log.txt', 'w') as list_export:
+            list_export.writelines("%s\n" % x for x in list_item)
+
+    def update_log(self, text):
+        self.log_view.insertPlainText(">> " + text + "\n")
+        self.log_view.moveCursor(QtGui.QTextCursor.End)
 
     def get_eos_filepath(self):
-
-        f = QtWidgets.QFileDialog.getOpenFileName(
+        self.eos_path, _ = QtWidgets.QFileDialog.getOpenFileName(
             self, 'Select file to open...', '', ".txt(*.txt)")
 
-        self.EOS_FILE = str(f[0])
+        self.lne_eospath.setText(self.eos_path)
 
-        self.eospath.setText(self.EOS_FILE)
-        
-        os.chdir(os.path.dirname(os.path.abspath(self.EOS_FILE)))
-        
-        self.updateLog("EOS file loaded: %s" % self.EOS_FILE)
+        os.chdir(os.path.dirname(os.path.abspath(self.eos_path)))
+        self.update_log("EOS file loaded: %s" % self.eos_path)
 
     def get_exif_filepath(self):
-
-        f = QtWidgets.QFileDialog.getOpenFileName(
+        self.exif_path, _ = QtWidgets.QFileDialog.getOpenFileName(
             self, 'Select file to open...', '', ".csv(*.csv)")
-        
-        self.EXIF_FILE = str(f[0])
 
-        self.exifpath.setText(self.EXIF_FILE)
-        
-        self.updateLog("EXIF file loaded: %s" % self.EXIF_FILE)
+        self.lne_exifpath.setText(self.exif_path)
+        self.update_log("EXIF file loaded: %s" % self.exif_path)
 
-    def showMessage(self, text, title):
+    @staticmethod
+    def show_message(text, title):
         msg_box = QtWidgets.QErrorMessage()
         msg_box.showMessage(title + ": <br>" + text.replace("\n", "<br>"))
         msg_box.exec_()
 
-    def joinData(self):
-        
-        self.coord = str(self.coordType.currentText())
+    def join_data(self):
+        out_path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save As...', '', "*.txt")
+        self.update_log(f"File saved to {out_path}")
 
-        outFile = QtWidgets.QFileDialog.getSaveFileName(
-            self, 'Save As...', '', "*.txt")
-        
-        self.updateLog("File saved to %s" % str(outFile))
-        
-        f = io.StringIO()
-        
         try:
-            with redirect_stdout(f):
-                ortho_renamer = OrthoRenamer()
-                
-                ortho_renamer.coordType = self.coord
-                
-                ortho_renamer.join_eos_exif_and_write_output(
-                    self.EOS_FILE, self.EXIF_FILE, outFile[0], self.separator, int(self.headerOffset.text()))
-            
-                self.writeList(ortho_renamer.errors)
+            with redirect_stdout(out_stream := io.StringIO()):
+                if self.coord == "Geographic":
+                    ortho_renamer = GeographicOrthoRenamer()
+                else:
+                    ortho_renamer = UTMOrthoRenamer()
 
-            out = f.getvalue()
-            
-            #self.showMessage(out, 'Join output')
-            
-            self.updateLog(out)
-            
+                # Create the joined file
+                ortho_renamer(self.eos_path, self.exif_path, out_path, self.separator)
+                self.write_list(ortho_renamer.errors)
+
+            out = out_stream.getvalue()
+            self.update_log(out)
+
         except Exception as e:
-            
-            #self.showMessage(str(e), "Error")
-            
-            self.updateLog(str(e))
+            self.update_log(str(e))
 
 
-app = QtWidgets.QApplication(sys.argv)
-
-form = joinData_Form()
-
-form.show()
-
-app.exec_()
+if __name__ == '__main__':
+    app = QtWidgets.QApplication(sys.argv)
+    form = JoinDataForm()
+    app.exec_()
