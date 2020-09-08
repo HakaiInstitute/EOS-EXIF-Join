@@ -83,11 +83,14 @@ jobs:
       - name: Get tag
         id: tag
         run: |
-          echo ::set-output name=tag::${GITHUB_REF#refs/tags/};
+          echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
+      - name: Detect prerelease
+        id: prerelease
+        run: |
           if echo ${{ steps.tag.outputs.tag }} | grep -qe '?*.*.*rc*'; then
-              echo "::set-output name=prerelease::true"
+              echo ::set-output name=prerelease::true
           else
-              echo "::set-output name=prerelease::false"
+              echo ::set-output name=prerelease::false
           fi
       - name: Download Linux gzip release file
         uses: actions/download-artifact@master
@@ -108,7 +111,7 @@ jobs:
           tag_name: ${{ steps.tag.outputs.tag }}
           release_name: ${{ steps.tag.outputs.tag }}
           draft: false
-          prerelease: ${{ steps.tag.outputs.prerelease }}
+          prerelease: ${{ steps.prerelease.outputs.prerelease }}
       - name: Upload Linux gzip release file asset
         uses: actions/upload-release-asset@v1.0.1
         env:
