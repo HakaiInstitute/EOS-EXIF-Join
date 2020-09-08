@@ -2,8 +2,7 @@ name: Release
 
 on:
   push:
-    tags:
-      - '*.*.*'
+    - 'tags'
 
 jobs:
 
@@ -27,15 +26,15 @@ jobs:
           pip install -r requirements.txt
       - name: Building GUI
         run: |
-          pyinstaller --name=EOS_EXIF_Join-${{ steps.tag.outputs.tag }} --add-data="resources/gui.ui:." --hidden-import=PyQt5.sip --windowed --onefile gui.py
+          pyinstaller --name=EOS-EXIF-Join-${{ steps.tag.outputs.tag }} --add-data="resources/gui.ui:." --hidden-import=PyQt5.sip --windowed --onefile gui.py
       - name: Gzip release
         run: |
-          tar -czvf dist/EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-linux.tar.gz -C dist EOS_EXIF_Join-${{ steps.tag.outputs.tag }}
+          tar -czvf dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz -C dist EOS-EXIF-Join-${{ steps.tag.outputs.tag }}
       - name: Upload Gzip artifact
         uses: actions/upload-artifact@v1
         with:
-          name: EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
-          path: dist/EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
+          name: EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
+          path: dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
 
   Windows:
     name: Build Windows
@@ -58,17 +57,17 @@ jobs:
           pip install -r requirements.txt
       - name: Building GUI
         run: |
-          pyinstaller --name=EOS_EXIF_Join-${{ steps.tag.outputs.tag }} --icon=resources/logo.ico --hidden-import=PyQt5.sip --windowed --onefile gui.py
+          pyinstaller --name=EOS-EXIF-Join-${{ steps.tag.outputs.tag }} --add-data="resources/gui.ui;." --icon=resources/logo.ico --windowed --onefile gui.py
       - name: Zip release
         run: |
           cd dist
-          7z a EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-win64.zip EOS_EXIF_Join-${{ steps.tag.outputs.tag }}.exe
+          7z a EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip EOS-EXIF-Join-${{ steps.tag.outputs.tag }}.exe
           cd -
       - name: Upload Zip artifact
         uses: actions/upload-artifact@v1
         with:
-          name: EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-win64.zip
-          path: dist/EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-win64.zip
+          name: EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip
+          path: dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip
 
   Release:
     needs: [Linux, Windows]
@@ -84,13 +83,13 @@ jobs:
       - name: Download Linux gzip release file
         uses: actions/download-artifact@master
         with:
-          name: EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
-          path: dist/EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
+          name: EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
+          path: dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
       - name: Download Windows zip release file
         uses: actions/download-artifact@master
         with:
-          name: EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-win64.zip
-          path: dist/EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-win64.zip
+          name: EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip
+          path: dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
@@ -107,8 +106,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-linux.tar.gz/EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
-          asset_name: EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
+          asset_path: dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
+          asset_name: EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
           asset_content_type: application/gzip
       - name: Upload Windows zip release file asset
         uses: actions/upload-release-asset@v1.0.1
@@ -116,6 +115,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-win64.zip/EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-win64.zip
-          asset_name: EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-win64.zip
+          asset_path: dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip
+          asset_name: EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip
           asset_content_type: application/zip
