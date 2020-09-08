@@ -27,7 +27,7 @@ jobs:
           pip install -r requirements.txt
       - name: Building GUI
         run: |
-          pyinstaller --name=EOS_EXIF_Join-${{ steps.tag.outputs.tag }} --add-data="resources/gui.ui:." --windowed --onefile gui.py
+          pyinstaller --name=EOS_EXIF_Join-${{ steps.tag.outputs.tag }} --add-data="resources/gui.ui:." --hidden-import=PyQt5.sip --windowed --onefile gui.py
       - name: Gzip release
         run: |
           tar -czvf dist/EOS_EXIF_Join-${{ steps.tag.outputs.tag }}-linux.tar.gz -C dist EOS_EXIF_Join-${{ steps.tag.outputs.tag }}
@@ -58,7 +58,7 @@ jobs:
           pip install -r requirements.txt
       - name: Building GUI
         run: |
-          pyinstaller --name=EOS_EXIF_Join-${{ steps.tag.outputs.tag }} --onefile --windowed --icon=resources/logo.ico gui.py
+          pyinstaller --name=EOS_EXIF_Join-${{ steps.tag.outputs.tag }} --icon=resources/logo.ico --hidden-import=PyQt5.sip --windowed --onefile gui.py
       - name: Zip release
         run: |
           cd dist
