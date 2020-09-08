@@ -13,10 +13,10 @@ pip install -r requirements.txt
 
 ## Running
 
-Use joinData.exe or
+Use join_data.exe or
 
 ```sh
-python joinData.py
+python join_data.py
 ```
 
 ## Tests
