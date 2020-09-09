@@ -2,7 +2,11 @@ name: Build GUI
 
 on:
   push:
+    branches-ignore:
+      - '*'
     tags:
+      - '*.*.*'
+      - '*.*.*rc*'
       - 'v*.*.*'
       - 'v*.*.*rc*'
 
