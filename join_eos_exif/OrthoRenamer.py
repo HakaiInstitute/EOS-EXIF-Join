@@ -149,7 +149,7 @@ class UTMOrthoRenamer(OrthoRenamer):
             'CIR_Filena': 'NewFilename',
             'Easting': 'EASTING',
             'Northing': 'NORTHING',
-            'Ellips': 'ELLIPSOID HEIGHT',
+            'Altitude': 'ORTHOMETRIC HEIGHT',
             'Omega': 'OMEGA',
             'Phi': 'PHI',
             'Kappa': 'KAPPA'
@@ -157,9 +157,9 @@ class UTMOrthoRenamer(OrthoRenamer):
 
 
 if __name__ == "__main__":
-    eos_file = '../sample_files/1/EoS.txt'
-    exif_file = '../sample_files/1/ExifLog.csv'
-    output_file = '../sample_files/1/eos_exif_joined.txt'
+    eos_file = '../sample_files/4/EoS.txt'
+    exif_file = '../sample_files/4/ExifLog.csv'
+    output_file = '../sample_files/4/eos_exif_joined.txt'
 
     ortho_renamer = UTMOrthoRenamer()
     ortho_renamer.join_eos_exif_and_write_output(eos_file, exif_file, output_file)
