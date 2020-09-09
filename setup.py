@@ -2,9 +2,9 @@ from setuptools import setup
 import os
 
 setup(
-    name='joinEOStoEXIF',
+    name='join_eos_exif',
     version=os.environ['VERSION'],
-    packages=['core'],
+    packages=['join_eos_exif'],
     install_requires=['numpy', 'pandas'],
     url='https://github.com/HakaiInstitute/joinEOStoEXIF',
     license='MIT',

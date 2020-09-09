@@ -5,7 +5,7 @@ from contextlib import redirect_stdout
 
 from PyQt5 import QtGui, QtWidgets, uic
 
-from core.OrthoRenamer import GeographicOrthoRenamer, UTMOrthoRenamer
+from join_eos_exif.OrthoRenamer import GeographicOrthoRenamer, UTMOrthoRenamer
 
 
 def resource_path(relative_path):
