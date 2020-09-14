@@ -76,7 +76,7 @@ class OrthoRenamer(ABC):
         joined = pd.merge(eos, exif, left_on='TIME (s)', right_on='Seconds')
 
         # Create updated filename column
-        joined['NewFilename'] = joined['Filename'].str[:-4] + "_rgbi.tif"
+        joined['CIR_Filename'] = joined['Filename'].str[:-4] + "_rgbi.tif"
 
         # Populate the errors list
         unmatched_exif = exif[(~exif['Filename'].isin(joined['Filename']))]
@@ -131,7 +131,7 @@ class GeographicOrthoRenamer(OrthoRenamer):
     def csv2df_map(self):
         """Defines the mapping from the output CSV column header names to appropriate Pandas dataframe column name."""
         return OrderedDict({
-            'CIR_Filena': 'NewFilename',
+            'CIR_Filename': 'CIR_Filename',
             'Lon': 'LONG',
             'Lat': 'LAT',
             'Ellips': 'ELLIPSOID HEIGHT',
@@ -146,7 +146,7 @@ class UTMOrthoRenamer(OrthoRenamer):
     def csv2df_map(self):
         """Defines the mapping from the output CSV column header names to appropriate Pandas dataframe column name."""
         return OrderedDict({
-            'CIR_Filena': 'NewFilename',
+            'CIR_Filename': 'CIR_Filename',
             'Easting': 'EASTING',
             'Northing': 'NORTHING',
             'Altitude': 'ORTHOMETRIC HEIGHT',
