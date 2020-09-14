@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/joinEOStoEXIF.iml" filepath="$PROJECT_DIR$/.idea/joinEOStoEXIF.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/join-eos-exif.iml" filepath="$PROJECT_DIR$/.idea/join-eos-exif.iml" />
     </modules>
   </component>
 </project>
