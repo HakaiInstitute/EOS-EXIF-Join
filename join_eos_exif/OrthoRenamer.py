@@ -149,7 +149,7 @@ class UTMOrthoRenamer(OrthoRenamer):
             'CIR_Filename': 'CIR_Filename',
             'Easting': 'EASTING',
             'Northing': 'NORTHING',
-            'Altitude': 'ORTHOMETRIC HEIGHT',
+            'Altitude': 'ELLIPSOID HEIGHT',
             'Omega': 'OMEGA',
             'Phi': 'PHI',
             'Kappa': 'KAPPA'
