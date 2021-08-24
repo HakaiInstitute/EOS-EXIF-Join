@@ -5,7 +5,7 @@ from contextlib import redirect_stdout
 
 from PyQt5 import QtGui, QtWidgets, uic
 
-from join_eos_exif.OrthoRenamer import GeographicOrthoRenamer, GeographicEllipsRenamer, UTMOrthoRenamer, UTMEllipsRenamer
+from join_eos_exif.OrthoRenamer import GeographicOrthoRenamer, UTMOrthoRenamer
 
 
 def resource_path(relative_path):
@@ -73,25 +73,20 @@ class JoinDataForm(QtWidgets.QWidget):
         msg_box.showMessage(title + ": <br>" + text.replace("\n", "<br>"))
         msg_box.exec_()
 
-    @property
-    def joiner(self):
-        if self.coord_type == "Geographic/Ellips. height":
-            return GeographicEllipsRenamer()
-        elif self.coord_type == "Geographic/Ortho. height":
-            return GeographicOrthoRenamer()
-        elif self.coord_type == "UTM/Ellips. height":
-            return UTMEllipsRenamer()
-        return UTMOrthoRenamer()
-
     def join_data(self):
         out_path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save As...', '', "*.txt")
         self.update_log(f"File saved to {out_path}")
 
         try:
             with redirect_stdout(out_stream := io.StringIO()):
+                if self.coord_type == "Geographic":
+                    ortho_renamer = GeographicOrthoRenamer()
+                else:
+                    ortho_renamer = UTMOrthoRenamer()
+
                 # Create the joined file
-                self.joiner(self.eos_path, self.exif_path, out_path, self.separator)
-                self.write_list([f"No match found for file \t{fn}" for fn in self.joiner.errors])
+                ortho_renamer(self.eos_path, self.exif_path, out_path, self.separator)
+                self.write_list([f"No match found for file \t{fn}" for fn in ortho_renamer.errors])
 
             out = out_stream.getvalue()
             self.update_log(out)
