@@ -123,12 +123,22 @@
         </property>
         <item>
          <property name="text">
-          <string>Geographic</string>
+          <string>Geographic/Ellips. height</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>UTM</string>
+          <string>Geographic/Ortho. height</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>UTM/Ellips. height</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>UTM/Ortho. height</string>
          </property>
         </item>
        </widget>
