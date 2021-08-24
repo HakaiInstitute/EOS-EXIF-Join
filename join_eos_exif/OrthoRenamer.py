@@ -22,7 +22,7 @@ class OrthoRenamer(ABC):
     def read_eos_file(self, filename: str) -> pd.DataFrame:
         """
         Reads the EoS file
-        returns list if lists
+        returns list of lists
         EoS file uses tab delimiters
         """
         header_offset = self._get_eos_header_offset(filename)
@@ -134,6 +134,20 @@ class GeographicOrthoRenamer(OrthoRenamer):
             'CIR_Filename': 'CIR_Filename',
             'Lon': 'LONG',
             'Lat': 'LAT',
+            'Altitude': 'ORTHOMETRIC HEIGHT',
+            'Omega': 'OMEGA',
+            'Phi': 'PHI',
+            'Kappa': 'KAPPA'
+        })
+
+class GeographicEllipsRenamer(OrthoRenamer):
+    @property
+    def csv2df_map(self):
+        """Defines the mapping from the output CSV column header names to appropriate Pandas dataframe column name."""
+        return OrderedDict({
+            'CIR_Filename': 'CIR_Filename',
+            'Lon': 'LONG',
+            'Lat': 'LAT',
             'Ellips': 'ELLIPSOID HEIGHT',
             'Omega': 'OMEGA',
             'Phi': 'PHI',
@@ -150,6 +164,20 @@ class UTMOrthoRenamer(OrthoRenamer):
             'Easting': 'EASTING',
             'Northing': 'NORTHING',
             'Altitude': 'ORTHOMETRIC HEIGHT',
+            'Omega': 'OMEGA',
+            'Phi': 'PHI',
+            'Kappa': 'KAPPA'
+        })
+
+class UTMEllipsRenamer(OrthoRenamer):
+    @property
+    def csv2df_map(self):
+        """Defines the mapping from the output CSV column header names to appropriate Pandas dataframe column name."""
+        return OrderedDict({
+            'CIR_Filename': 'CIR_Filename',
+            'Easting': 'EASTING',
+            'Northing': 'NORTHING',
+            'Ellips': 'ELLIPSOID HEIGHT',
             'Omega': 'OMEGA',
             'Phi': 'PHI',
             'Kappa': 'KAPPA'
