@@ -5,7 +5,8 @@ from contextlib import redirect_stdout
 
 from PyQt5 import QtGui, QtWidgets, uic
 
-from join_eos_exif.OrthoRenamer import GeographicOrthoRenamer, GeographicEllipsRenamer, UTMOrthoRenamer, UTMEllipsRenamer
+from join_eos_exif.OrthoRenamer import GeographicEllipsRenamer, GeographicOrthoRenamer, \
+    UTMEllipsRenamer, UTMOrthoRenamer
 
 
 def resource_path(relative_path):
@@ -42,6 +43,10 @@ class JoinDataForm(QtWidgets.QWidget):
     def coord_type(self):
         return str(self.combo_coord_type.currentText())
 
+    @property
+    def orthometric_heights(self):
+        return self.radio_orthometric.isChecked()
+
     @staticmethod
     def write_list(list_item):
         with open('log.txt', 'w') as list_export:
@@ -75,13 +80,16 @@ class JoinDataForm(QtWidgets.QWidget):
 
     @property
     def joiner(self):
-        if self.coord_type == "Geographic/Ellips. height":
+        if self.coord_type == "Geographic":
+            if self.orthometric_heights:
+                return GeographicOrthoRenamer()
             return GeographicEllipsRenamer()
-        elif self.coord_type == "Geographic/Ortho. height":
-            return GeographicOrthoRenamer()
-        elif self.coord_type == "UTM/Ellips. height":
+        elif self.coord_type == "UTM":
+            if self.orthometric_heights:
+                return UTMOrthoRenamer()
             return UTMEllipsRenamer()
-        return UTMOrthoRenamer()
+        else:
+            raise RuntimeError("coord_type error")
 
     def join_data(self):
         out_path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save As...', '', "*.txt")

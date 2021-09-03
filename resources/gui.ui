@@ -123,24 +123,71 @@
         </property>
         <item>
          <property name="text">
-          <string>Geographic/Ellips. height</string>
+          <string>Geographic</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>Geographic/Ortho. height</string>
+          <string>UTM</string>
          </property>
         </item>
-        <item>
-         <property name="text">
-          <string>UTM/Ellips. height</string>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QWidget" name="widget_5" native="true">
+     <layout class="QVBoxLayout" name="verticalLayout_4">
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>9</number>
+      </property>
+      <item>
+       <widget class="QLabel" name="label_3">
+        <property name="text">
+         <string>Heights</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_6" native="true">
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <layout class="QHBoxLayout" name="horizontalLayout_4">
+         <property name="topMargin">
+          <number>0</number>
          </property>
-        </item>
-        <item>
-         <property name="text">
-          <string>UTM/Ortho. height</string>
+         <property name="bottomMargin">
+          <number>0</number>
          </property>
-        </item>
+         <item>
+          <widget class="QRadioButton" name="radio_ellipsoidal">
+           <property name="text">
+            <string>Ellipsoidal</string>
+           </property>
+           <property name="checked">
+            <bool>true</bool>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QRadioButton" name="radio_orthometric">
+           <property name="text">
+            <string>Orthometric</string>
+           </property>
+          </widget>
+         </item>
+        </layout>
        </widget>
       </item>
      </layout>
