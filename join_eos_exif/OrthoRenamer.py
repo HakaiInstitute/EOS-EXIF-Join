@@ -31,7 +31,8 @@ class OrthoRenamer(ABC):
 
         # columns represents names for the data columns as give in the file header
         columns = lines[header_offset - 5]
-        columns = [z for x in columns.split(",") if (z := x.strip())[0] != "#"]
+        columns = [x.strip() for x in columns.split(",")]
+        columns = columns[1:]  # discard ID column
 
         # data are the actual numerical data values corresponding to the column names
         data = lines[header_offset:]
@@ -63,17 +64,12 @@ class OrthoRenamer(ABC):
 
         returns list of lists
         """
-        # Truncate EOS Times
-        eos['TIME (s)'] = pd.to_numeric(eos['TIME (s)'], errors='coerce', downcast='float').dropna()
-        eos['TIME (s)'] = self.truncate_float(eos['TIME (s)'])
+        # Cast event IDs and drop missing
+        eos['# EVENT'] = pd.to_numeric(eos['# EVENT'], errors='coerce', downcast='integer').dropna()
+        exif['GPS Event'] = pd.to_numeric(exif['GPS Event'], errors='coerce', downcast='integer').dropna()
 
-        # Truncate Exif Times
-        exif[['Weeks', 'Seconds']] = exif['Weeks:Seconds'].str.split(":", n=1, expand=True)
-        exif['Seconds'] = pd.to_numeric(exif['Seconds'], errors='coerce', downcast='float').dropna()
-        exif['Seconds'] = self.truncate_float(exif['Seconds'])
-
-        # Inner join on times
-        joined = pd.merge(eos, exif, left_on='TIME (s)', right_on='Seconds')
+        # Inner join on event #s
+        joined = pd.merge(eos, exif, left_on='# EVENT', right_on='GPS Event')
 
         # Create updated filename column
         joined['CIR_Filename'] = joined['Filename'].str[:-4] + "_rgbi.tif"
