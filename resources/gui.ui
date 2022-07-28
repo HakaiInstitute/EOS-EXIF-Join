@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>706</width>
+    <width>685</width>
     <height>669</height>
    </rect>
   </property>
@@ -21,67 +21,60 @@
     <number>9</number>
    </property>
    <item>
-    <widget class="QWidget" name="widget" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout">
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <item>
-       <widget class="QLineEdit" name="lne_eospath"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btn_load_eos">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Load EOS</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item>
-    <widget class="QWidget" name="widget_2" native="true">
-     <layout class="QHBoxLayout" name="horizontalLayout_2">
-      <property name="spacing">
-       <number>6</number>
-      </property>
-      <property name="leftMargin">
-       <number>0</number>
-      </property>
-      <property name="topMargin">
-       <number>9</number>
-      </property>
-      <property name="rightMargin">
-       <number>0</number>
-      </property>
-      <property name="bottomMargin">
-       <number>9</number>
-      </property>
-      <item>
-       <widget class="QLineEdit" name="lne_exifpath"/>
-      </item>
-      <item>
-       <widget class="QPushButton" name="btn_load_exif">
-        <property name="font">
-         <font>
-          <pointsize>14</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Load EXIF</string>
-        </property>
-       </widget>
-      </item>
-     </layout>
-    </widget>
+    <layout class="QGridLayout" name="gridLayout">
+     <property name="verticalSpacing">
+      <number>19</number>
+     </property>
+     <item row="2" column="0">
+      <widget class="QLineEdit" name="lne_exifpath"/>
+     </item>
+     <item row="1" column="0">
+      <widget class="QLineEdit" name="lne_eospath">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+      </widget>
+     </item>
+     <item row="2" column="1">
+      <widget class="QPushButton" name="btn_load_exif">
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Load EXIF</string>
+       </property>
+      </widget>
+     </item>
+     <item row="1" column="1">
+      <widget class="QPushButton" name="btn_load_eos">
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Load EOS</string>
+       </property>
+      </widget>
+     </item>
+     <item row="3" column="0">
+      <widget class="QLineEdit" name="lne_savepath"/>
+     </item>
+     <item row="3" column="1">
+      <widget class="QPushButton" name="btn_save_as">
+       <property name="font">
+        <font>
+         <pointsize>14</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Save As</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
    </item>
    <item>
     <widget class="QWidget" name="widget_4" native="true">
@@ -123,12 +116,12 @@
         </property>
         <item>
          <property name="text">
-          <string>Geographic</string>
+          <string>UTM</string>
          </property>
         </item>
         <item>
          <property name="text">
-          <string>UTM</string>
+          <string>Geographic</string>
          </property>
         </item>
        </widget>
@@ -216,7 +209,7 @@
     </widget>
    </item>
    <item>
-    <widget class="QWidget" name="widget_3" native="true">
+    <widget class="QWidget" name="widget_7" native="true">
      <layout class="QHBoxLayout" name="horizontalLayout_3">
       <item>
        <spacer name="horizontalSpacer">

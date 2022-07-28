@@ -136,6 +136,7 @@ class GeographicOrthoRenamer(OrthoRenamer):
             'Kappa': 'KAPPA'
         })
 
+
 class GeographicEllipsRenamer(OrthoRenamer):
     @property
     def csv2df_map(self):
@@ -164,6 +165,7 @@ class UTMOrthoRenamer(OrthoRenamer):
             'Phi': 'PHI',
             'Kappa': 'KAPPA'
         })
+
 
 class UTMEllipsRenamer(OrthoRenamer):
     @property
