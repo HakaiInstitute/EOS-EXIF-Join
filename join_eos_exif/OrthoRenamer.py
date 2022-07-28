@@ -48,7 +48,15 @@ class OrthoRenamer(ABC):
         skip one header line in EXIF
         EXIF file uses comma separator
         """
-        return pd.read_csv(filename)
+        exif = pd.read_csv(filename)
+
+        # Filter extras headers from file concatenation
+        exif = exif[exif['Filename'] != 'Filename']
+
+        # Filter missing date rows
+        exif = exif[exif['GPS Time'] != 'XX:XX:XX.XXXXXX']
+
+        return exif
 
     @staticmethod
     def truncate_float(number: float, decimals: int = 3) -> float:
