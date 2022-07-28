@@ -6,7 +6,7 @@
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/join_eos_exif.egg-info" />
     </content>
-    <orderEntry type="jdk" jdkName="Pipenv (join-eos-exif)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Python 3.9 (join-eos-exif)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
