@@ -1,134 +1,135 @@
-name: Build GUI
+name: Create Release
 
 on:
   push:
     branches-ignore:
-      - '*'
+      - '**'
     tags:
-      - '*.*.*'
-      - '*.*.*rc*'
-      - 'v*.*.*'
-      - 'v*.*.*rc*'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+rc[0-9]+'
 
 jobs:
+  build-binaries:
+    defaults:
+      run:
+        shell: bash -l {0}
 
-  Linux:
-    name: Build Linux
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ windows-latest, ubuntu-latest ]
+
+    runs-on: ${{ matrix.os }}
+
     steps:
-      - uses: actions/checkout@v2
-      - name: Get tag
-        id: tag
-        run: |
-          echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v2
+      - uses: actions/checkout@v3
+
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
         with:
-          python-version: 3.8
+          python-version: "3.9"
+
+      - name: Setup Poetry
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: 1.2.2
+
       - name: Install dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install pyinstaller
-          pip install -r requirements.txt
-      - name: Building GUI
-        run: |
-          pyinstaller --name=EOS-EXIF-Join-${{ steps.tag.outputs.tag }} --add-data="resources/gui.ui:." --windowed --onefile gui.py
-      - name: Gzip release
-        run: |
-          tar -czvf dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz -C dist EOS-EXIF-Join-${{ steps.tag.outputs.tag }}
-      - name: Upload Gzip artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
-          path: dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
+          poetry update
+          poetry version ${{ env.tag }}
+          poetry run pip install --upgrade pip    
+          poetry run pip install --upgrade setuptools
 
-  Windows:
-    name: Build Windows
-    runs-on: windows-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Get tag
-        id: tag
-        shell: bash
-        run: |
-          echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
-      - name: Set up Python 3.8
-        uses: actions/setup-python@v2
-        with:
-          python-version: 3.8
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pyinstaller
-          pip install -r requirements.txt
-      - name: Building GUI
-        run: |
-          pyinstaller --name=EOS-EXIF-Join-${{ steps.tag.outputs.tag }} --add-data="resources/gui.ui;." --icon=resources/logo.ico --windowed --onefile gui.py
-      - name: Zip release
-        run: |
-          cd dist
-          7z a EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip EOS-EXIF-Join-${{ steps.tag.outputs.tag }}.exe
-          cd -
-      - name: Upload Zip artifact
-        uses: actions/upload-artifact@v1
-        with:
-          name: EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip
-          path: dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip
+      - name: Build Windows GUI Executable
+        if: ${{ runner.os == 'Windows' }}
+        run: >
+          poetry run pyinstaller
+          --onefile
+          --windowed
+          --icon='gui\resources\logo.ico'
+          --add-data='gui\resources\*.ico;resources'
+          --add-data="gui\resources\*.ui;resources"
+          gui/__main__.py
 
-  Release:
-    needs: [Linux, Windows]
+      - name: Build Linux GUI Executable
+        if: ${{ runner.os == 'Linux' }}
+        run: >
+          poetry run pyinstaller
+          --onefile
+          --windowed
+          --icon='gui/resources/logo.ico'
+          --add-data='gui/resources/*.ico:resources'
+          --add-data="gui/resources/*.ui:resources"
+          gui/__main__.py
+
+
+      - name: Archive release artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.os }}-dist
+          path: dist
+
+  create-release:
+    needs: build-binaries
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
       - name: Get tag
         id: tag
         run: |
-          echo ::set-output name=tag::${GITHUB_REF#refs/tags/}
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
       - name: Detect prerelease
         id: prerelease
         run: |
-          if echo ${{ steps.tag.outputs.tag }} | grep -qe '?*.*.*rc*'; then
-              echo ::set-output name=prerelease::true
+          if echo ${{ env.tag }} | grep -qe '?*.*.*rc*'; then
+              echo "prerelease=true" >> $GITHUB_ENV
           else
-              echo ::set-output name=prerelease::false
+              echo "prerelease=false" >> $GITHUB_ENV
           fi
-      - name: Download Linux gzip release file
-        uses: actions/download-artifact@master
+
+      - name: Download Windows artifacts
+        uses: actions/download-artifact@v2
         with:
-          name: EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
-          path: dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
-      - name: Download Windows zip release file
-        uses: actions/download-artifact@master
+          name: windows-latest-dist
+          path: win64-dist
+
+      - name: Download Ubuntu artifacts
+        uses: actions/download-artifact@v2
         with:
-          name: EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip
-          path: dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip
+          name: ubuntu-latest-dist
+          path: linux-dist
+
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ steps.tag.outputs.tag }}
-          release_name: ${{ steps.tag.outputs.tag }}
+          tag_name: ${{ env.tag }}
+          release_name: ${{ env.tag }}
           draft: false
-          prerelease: ${{ steps.prerelease.outputs.prerelease }}
-      - name: Upload Linux gzip release file asset
+          prerelease: ${{ env.prerelease }}
+
+      - name: Upload Windows GUI assets
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
-          asset_name: EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-linux.tar.gz
-          asset_content_type: application/gzip
-      - name: Upload Windows zip release file asset
+          asset_path: win64-dist/__main__.exe
+          asset_name: EOS-EXIF-Join-${{ env.tag }}-win64.exe
+          asset_content_type: application/octet-stream
+
+      - name: Upload Ubuntu GUI assets
         uses: actions/upload-release-asset@v1.0.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip/EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip
-          asset_name: EOS-EXIF-Join-${{ steps.tag.outputs.tag }}-win64.zip
-          asset_content_type: application/zip
+          asset_path: linux-dist/__main__
+          asset_name: EOS-EXIF-Join-${{ env.tag }}-linux
+          asset_content_type: application/octet-stream
