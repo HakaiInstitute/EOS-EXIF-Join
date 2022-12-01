@@ -9,6 +9,9 @@
    id="svg5"
    inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
    sodipodi:docname="logo_new.svg"
+   inkscape:export-filename="/home/taylor/PycharmProjects/join-eos-exif/gui/resources/logo.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns="http://www.w3.org/2000/svg"
@@ -24,15 +27,15 @@
      inkscape:document-units="px"
      showgrid="false"
      inkscape:lockguides="false"
-     inkscape:zoom="5.9916667"
-     inkscape:cx="60.166898"
-     inkscape:cy="62.753824"
+     inkscape:zoom="1"
+     inkscape:cx="27"
+     inkscape:cy="55"
      inkscape:window-width="1920"
      inkscape:window-height="1061"
      inkscape:window-x="0"
      inkscape:window-y="27"
      inkscape:window-maximized="1"
-     inkscape:current-layer="layer3"
+     inkscape:current-layer="g8391"
      showguides="true"
      inkscape:guide-bbox="true"
      inkscape:snap-text-baseline="true"
@@ -40,7 +43,7 @@
      inkscape:snap-bbox-edge-midpoints="true"
      inkscape:bbox-nodes="true"
      inkscape:bbox-paths="true"
-     inkscape:snap-object-midpoints="true"
+     inkscape:snap-object-midpoints="false"
      inkscape:snap-bbox-midpoints="true"
      inkscape:snap-global="true">
     <sodipodi:guide
@@ -92,13 +95,68 @@
        inkscape:locked="false"
        inkscape:color="rgb(255,255,255)" />
     <sodipodi:guide
-       position="50.326519,84.420002"
-       orientation="0,-1"
-       id="guide18350" />
+       position="-39.598104,85"
+       orientation="0,1"
+       id="guide18350"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(0,0,255)" />
     <sodipodi:guide
-       position="69.673477,35.799995"
-       orientation="0,-1"
-       id="guide18352" />
+       position="-39.488093,35"
+       orientation="0,1"
+       id="guide18352"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="0,120"
+       orientation="0,1"
+       id="guide71724"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(255,190,111)" />
+    <sodipodi:guide
+       position="0,115"
+       orientation="0,1"
+       id="guide71726"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(255,190,111)" />
+    <sodipodi:guide
+       position="0,5"
+       orientation="0,1"
+       id="guide71728"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(255,190,111)" />
+    <sodipodi:guide
+       position="-62.666667,65"
+       orientation="0,1"
+       id="guide71935"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="-48,55"
+       orientation="0,1"
+       id="guide71937"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="17,120"
+       orientation="-1,0"
+       id="guide72065"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(0,0,255)" />
+    <sodipodi:guide
+       position="103,120"
+       orientation="-1,0"
+       id="guide72067"
+       inkscape:label=""
+       inkscape:locked="false"
+       inkscape:color="rgb(0,0,255)" />
   </sodipodi:namedview>
   <defs
      id="defs2" />
@@ -121,12 +179,12 @@
      inkscape:label="ChainUpper"
      sodipodi:insensitive="true">
     <ellipse
-       style="fill:none;fill-opacity:1;stroke:#ffffbf;stroke-width:2.61127;stroke-opacity:1"
-       id="path17920-3-6"
-       cx="54"
-       cy="35.579998"
-       rx="50.947914"
-       ry="28.563057" />
+       style="fill:#ffffbf;fill-opacity:1;stroke:#ffffbf;stroke-width:2.68619;stroke-opacity:1"
+       id="path17920-3-7"
+       cx="60.079517"
+       cy="35"
+       rx="53.73642"
+       ry="28.656904" />
   </g>
   <g
      inkscape:groupmode="layer"
@@ -134,45 +192,45 @@
      inkscape:label="ChainLower"
      sodipodi:insensitive="true">
     <ellipse
-       style="fill:none;fill-opacity:1;stroke:#ffffbf;stroke-width:2.61127;stroke-opacity:1"
-       id="path17920-3"
-       cx="66"
-       cy="84.200005"
-       rx="50.947914"
-       ry="28.563057" />
+       style="fill:#ffffbf;fill-opacity:1;stroke:#ffffbf;stroke-width:2.68618;stroke-opacity:1"
+       id="path17920-3-7-5"
+       cx="60.079514"
+       cy="85"
+       rx="53.736423"
+       ry="28.65691" />
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer3"
-     inkscape:label="EOS"
-     sodipodi:insensitive="true">
+     inkscape:label="EOS">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#d7191c;fill-opacity:1;stroke:none"
-       x="13.860052"
-       y="49.759998"
-       id="text146554"><tspan
+       style="font-style:normal;font-weight:normal;font-size:47.0721px;line-height:1.25;font-family:sans-serif;fill:#d7191c;fill-opacity:1;stroke:none;stroke-width:0.98067"
+       x="14.134179"
+       y="50.986996"
+       id="text146554"
+       transform="scale(0.98067008,1.0197109)"><tspan
          sodipodi:role="line"
          id="tspan146552"
-         x="13.860052"
-         y="49.759998"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Raleway;-inkscape-font-specification:Raleway">EOS</tspan></text>
+         x="14.134179"
+         y="50.986996"
+         style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-size:47.0721px;font-family:Raleway;-inkscape-font-specification:'Raleway Ultra-Bold';stroke-width:0.98067">EOS</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
      id="g8391"
-     inkscape:label="EXIF"
-     sodipodi:insensitive="true">
+     inkscape:label="EXIF">
     <text
        xml:space="preserve"
-       style="font-style:normal;font-weight:normal;font-size:40px;line-height:1.25;font-family:sans-serif;fill:#d7191c;fill-opacity:1;stroke:none"
-       x="23.340033"
-       y="98.400002"
-       id="text8389"><tspan
+       style="font-style:normal;font-weight:normal;font-size:45.0722px;line-height:1.25;font-family:sans-serif;fill:#d7191c;fill-opacity:1;stroke:none;stroke-width:0.939003"
+       x="15.039399"
+       y="95.905663"
+       id="text8389"
+       transform="scale(0.93900312,1.0649592)"><tspan
          sodipodi:role="line"
          id="tspan8387"
-         x="23.340033"
-         y="98.400002"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Raleway;-inkscape-font-specification:Raleway">EXIF</tspan></text>
+         x="15.039399"
+         y="95.905663"
+         style="font-style:normal;font-variant:normal;font-weight:800;font-stretch:normal;font-size:45.0722px;font-family:Raleway;-inkscape-font-specification:'Raleway Ultra-Bold';stroke-width:0.939003">EXIF</tspan></text>
   </g>
 </svg>
