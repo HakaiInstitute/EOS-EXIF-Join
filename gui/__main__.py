@@ -4,7 +4,7 @@ from contextlib import redirect_stdout
 from os import chdir, path
 
 from PyQt6 import QtWidgets, uic
-from PyQt6.QtGui import QTextCursor
+from PyQt6.QtGui import QIcon, QTextCursor
 
 from join_eos_exif.OrthoRenamer import GeographicEllipsRenamer, GeographicOrthoRenamer, \
     UTMEllipsRenamer, UTMOrthoRenamer
@@ -20,6 +20,10 @@ class JoinDataForm(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
         uic.loadUi(resource_path('resources/gui.ui'), self)
+
+        # Setup window
+        self.setWindowTitle("EOS EXIF Join")
+        self.setWindowIcon(QIcon(resource_path("resources/logo.ico")))
 
         self.btn_load_eos.clicked.connect(self.get_eos_filepath)
         self.btn_load_exif.clicked.connect(self.get_exif_filepath)
