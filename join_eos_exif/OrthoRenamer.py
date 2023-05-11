@@ -1,8 +1,11 @@
+import logging
 from abc import ABC, abstractmethod
 from collections import OrderedDict
 
 import numpy as np
 import pandas as pd
+
+logger = logging.getLogger(__name__)
 
 
 class OrthoRenamer(ABC):
@@ -13,11 +16,15 @@ class OrthoRenamer(ABC):
 
     @staticmethod
     def _get_eos_header_offset(filename: str) -> int:
-        offset = 0
         with open(filename) as f:
-            while f.readline().strip() != "Record Format:":
-                offset += 1
-        return offset + 7  # Additional 7 lines of info after "Record Format:"
+            lines = [line.strip() for line in f.readlines()]
+        try:
+            return lines.index("Record Format:") + 7
+        except ValueError:
+            logger.error(
+                'Invalid EOS file, could not find "Record Format" line in file.'
+            )
+            exit(1)
 
     def read_eos_file(self, filename: str) -> pd.DataFrame:
         """
