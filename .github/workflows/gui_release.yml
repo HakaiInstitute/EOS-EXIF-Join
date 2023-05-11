@@ -37,7 +37,7 @@ jobs:
         run: |
           poetry update
           poetry version ${{ env.tag }}
-          poetry run pip install --upgrade pip    
+          poetry run pip install --upgrade pip
           poetry run pip install --upgrade setuptools
 
       - name: Build Windows GUI Executable

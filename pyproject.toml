@@ -10,13 +10,15 @@ packages = [{include = "join_eos_exif"}]
 [tool.poetry.dependencies]
 python = ">=3.8.1,<3.11"
 PyQt6 = "^6.4.0"
-pandas = "^1.5.2"
 numpy = "^1.23.5"
+pandas = "^2.0.1"
 
 [tool.poetry.group.dev.dependencies]
+black = "^23.3.0"
+pre-commit = "^3.3.1"
 pyinstaller = "^5.6.2"
-flake8 = "^6.0.0"
 pytest = "^7.2.0"
+ruff = "^0.0.265"
 
 [build-system]
 requires = ["poetry-core"]
