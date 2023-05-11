@@ -1,9 +1,9 @@
 # See https://pre-commit.com for more information
 # See https://pre-commit.com/hooks.html for more hooks
+exclude: ^(sample_files|\.idea)/
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.4.0
-    exclude: ^sample_files/
     hooks:
       - id: trailing-whitespace
       - id: end-of-file-fixer

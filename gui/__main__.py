@@ -6,20 +6,24 @@ from os import chdir, path
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtGui import QIcon, QTextCursor
 
-from join_eos_exif.OrthoRenamer import GeographicEllipsRenamer, GeographicOrthoRenamer, \
-    UTMEllipsRenamer, UTMOrthoRenamer
+from join_eos_exif.OrthoRenamer import (
+    GeographicEllipsRenamer,
+    GeographicOrthoRenamer,
+    UTMEllipsRenamer,
+    UTMOrthoRenamer,
+)
 
 
 def resource_path(relative_path):
-    """ Get absolute path to resource, works for dev and for PyInstaller """
-    base_path = getattr(sys, '_MEIPASS', path.dirname(__file__))
+    """Get absolute path to resource, works for dev and for PyInstaller"""
+    base_path = getattr(sys, "_MEIPASS", path.dirname(__file__))
     return path.abspath(path.join(base_path, relative_path))
 
 
 class JoinDataForm(QtWidgets.QWidget):
     def __init__(self):
         super().__init__()
-        uic.loadUi(resource_path('resources/gui.ui'), self)
+        uic.loadUi(resource_path("resources/gui.ui"), self)
 
         # Setup window
         self.setWindowTitle("EOS EXIF Join")
@@ -68,28 +72,32 @@ class JoinDataForm(QtWidgets.QWidget):
 
     @staticmethod
     def write_list(list_item):
-        with open('log.txt', 'w') as list_export:
+        with open("log.txt", "w") as list_export:
             list_export.writelines("%s\n" % x for x in list_item)
 
     def update_log(self, text):
-        self.log_view.insertPlainText(">> " + text + "\n")
+        self.log_view.insertPlainText(text + "\n")
         self.log_view.moveCursor(QTextCursor.MoveOperation.End)
 
     def get_eos_filepath(self):
         self.eos_path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Select file to open...', '', ".txt(*.txt)")
+            self, "Select file to open...", "", ".txt(*.txt)"
+        )
 
         chdir(path.dirname(path.abspath(self.eos_path)))
         self.update_log("EOS file loaded: %s" % self.eos_path)
 
     def get_exif_filepath(self):
         self.exif_path, _ = QtWidgets.QFileDialog.getOpenFileName(
-            self, 'Select file to open...', '', ".csv(*.csv)")
+            self, "Select file to open...", "", ".csv(*.csv)"
+        )
 
         self.update_log("EXIF file loaded: %s" % self.exif_path)
 
     def get_save_filepath(self):
-        self.save_path, _ = QtWidgets.QFileDialog.getSaveFileName(self, 'Save As...', '', "*.txt")
+        self.save_path, _ = QtWidgets.QFileDialog.getSaveFileName(
+            self, "Save As...", "", "*.txt"
+        )
 
     @staticmethod
     def show_message(text, title):
@@ -116,8 +124,12 @@ class JoinDataForm(QtWidgets.QWidget):
         try:
             with redirect_stdout(out_stream := io.StringIO()):
                 # Create the joined file
-                self.joiner(self.eos_path, self.exif_path, self.save_path, self.separator)
-                self.write_list([f"No match found for file \t{fn}" for fn in self.joiner.errors])
+                self.joiner(
+                    self.eos_path, self.exif_path, self.save_path, self.separator
+                )
+                self.write_list(
+                    [f"No match found for file \t{fn}" for fn in self.joiner.errors]
+                )
 
             out = out_stream.getvalue()
             self.update_log(out)
@@ -127,7 +139,7 @@ class JoinDataForm(QtWidgets.QWidget):
             self.update_log(str(e))
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
     form = JoinDataForm()
     app.exec()

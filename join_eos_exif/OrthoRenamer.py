@@ -58,16 +58,16 @@ class OrthoRenamer(ABC):
         exif = pd.read_csv(filename)
 
         # Filter extras headers from file concatenation
-        exif = exif[exif['Filename'] != 'Filename']
+        exif = exif[exif["Filename"] != "Filename"]
 
         # Filter missing date rows
-        exif = exif[exif['GPS Time'] != 'XX:XX:XX.XXXXXX']
+        exif = exif[exif["GPS Time"] != "XX:XX:XX.XXXXXX"]
 
         return exif
 
     @staticmethod
     def truncate_float(number: float, decimals: int = 3) -> float:
-        return np.floor(number * 10 ** decimals) / 10 ** decimals
+        return np.floor(number * 10**decimals) / 10**decimals
 
     def log(self, message):
         if self.verbose:
@@ -80,18 +80,22 @@ class OrthoRenamer(ABC):
         returns list of lists
         """
         # Cast event IDs and drop missing
-        eos['# EVENT'] = pd.to_numeric(eos['# EVENT'], errors='coerce', downcast='integer').dropna()
-        exif['GPS Event'] = pd.to_numeric(exif['GPS Event'], errors='coerce', downcast='integer').dropna()
+        eos["# EVENT"] = pd.to_numeric(
+            eos["# EVENT"], errors="coerce", downcast="integer"
+        ).dropna()
+        exif["GPS Event"] = pd.to_numeric(
+            exif["GPS Event"], errors="coerce", downcast="integer"
+        ).dropna()
 
         # Inner join on event #s
-        joined = pd.merge(eos, exif, left_on='# EVENT', right_on='GPS Event')
+        joined = pd.merge(eos, exif, left_on="# EVENT", right_on="GPS Event")
 
         # Create updated filename column
-        joined['CIR_Filename'] = joined['Filename'].str[:-4] + "_rgbi.tif"
+        joined["CIR_Filename"] = joined["Filename"].str[:-4] + "_rgbi.tif"
 
         # Populate the errors list
-        unmatched_exif = exif[(~exif['Filename'].isin(joined['Filename']))]
-        self.errors = list(unmatched_exif['Filename'])
+        unmatched_exif = exif[(~exif["Filename"].isin(joined["Filename"]))]
+        self.errors = list(unmatched_exif["Filename"])
 
         # Print some info
         num_matched = len(joined)
@@ -109,8 +113,8 @@ class OrthoRenamer(ABC):
     @abstractmethod
     def csv2df_map(self) -> OrderedDict:
         """Define a mapping from the output CSV column header names
-            to the corresponding joined Pandas dataframe column name."""
-        raise NotImplemented
+        to the corresponding joined Pandas dataframe column name."""
+        raise NotImplementedError
 
     @property
     def output_csv_column_names(self) -> list:
@@ -120,7 +124,9 @@ class OrthoRenamer(ABC):
     def dataframe_columns_to_output(self) -> list:
         return list(self.csv2df_map.values())
 
-    def join_eos_exif_and_write_output(self, eos_path: str, exif_path: str, output_path: str, separator: str = ","):
+    def join_eos_exif_and_write_output(
+        self, eos_path: str, exif_path: str, output_path: str, separator: str = ","
+    ):
         # skip some header lines in eos file
         eos = self.read_eos_file(eos_path)
         exif = self.read_exif_file(exif_path)
@@ -140,67 +146,87 @@ class OrthoRenamer(ABC):
 class GeographicOrthoRenamer(OrthoRenamer):
     @property
     def csv2df_map(self):
-        """Defines the mapping from the output CSV column header names to appropriate Pandas dataframe column name."""
-        return OrderedDict({
-            'CIR_Filename': 'CIR_Filename',
-            'Lon': 'LONG',
-            'Lat': 'LAT',
-            'Altitude': 'ORTHOMETRIC HEIGHT',
-            'Omega': 'OMEGA',
-            'Phi': 'PHI',
-            'Kappa': 'KAPPA'
-        })
+        """
+        Defines the mapping from the output CSV column header names to
+            appropriate Pandas dataframe column name.
+        """
+        return OrderedDict(
+            {
+                "CIR_Filename": "CIR_Filename",
+                "Lon": "LONG",
+                "Lat": "LAT",
+                "Altitude": "ORTHOMETRIC HEIGHT",
+                "Omega": "OMEGA",
+                "Phi": "PHI",
+                "Kappa": "KAPPA",
+            }
+        )
 
 
 class GeographicEllipsRenamer(OrthoRenamer):
     @property
     def csv2df_map(self):
-        """Defines the mapping from the output CSV column header names to appropriate Pandas dataframe column name."""
-        return OrderedDict({
-            'CIR_Filename': 'CIR_Filename',
-            'Lon': 'LONG',
-            'Lat': 'LAT',
-            'Ellips': 'ELLIPSOID HEIGHT',
-            'Omega': 'OMEGA',
-            'Phi': 'PHI',
-            'Kappa': 'KAPPA'
-        })
+        """
+        Defines the mapping from the output CSV column header names to appropriate
+            Pandas dataframe column name.
+        """
+        return OrderedDict(
+            {
+                "CIR_Filename": "CIR_Filename",
+                "Lon": "LONG",
+                "Lat": "LAT",
+                "Ellips": "ELLIPSOID HEIGHT",
+                "Omega": "OMEGA",
+                "Phi": "PHI",
+                "Kappa": "KAPPA",
+            }
+        )
 
 
 class UTMOrthoRenamer(OrthoRenamer):
     @property
     def csv2df_map(self):
-        """Defines the mapping from the output CSV column header names to appropriate Pandas dataframe column name."""
-        return OrderedDict({
-            'CIR_Filename': 'CIR_Filename',
-            'Easting': 'EASTING',
-            'Northing': 'NORTHING',
-            'Altitude': 'ORTHOMETRIC HEIGHT',
-            'Omega': 'OMEGA',
-            'Phi': 'PHI',
-            'Kappa': 'KAPPA'
-        })
+        """
+        Defines the mapping from the output CSV column header names to appropriate
+            Pandas dataframe column name.
+        """
+        return OrderedDict(
+            {
+                "CIR_Filename": "CIR_Filename",
+                "Easting": "EASTING",
+                "Northing": "NORTHING",
+                "Altitude": "ORTHOMETRIC HEIGHT",
+                "Omega": "OMEGA",
+                "Phi": "PHI",
+                "Kappa": "KAPPA",
+            }
+        )
 
 
 class UTMEllipsRenamer(OrthoRenamer):
     @property
     def csv2df_map(self):
-        """Defines the mapping from the output CSV column header names to appropriate Pandas dataframe column name."""
-        return OrderedDict({
-            'CIR_Filename': 'CIR_Filename',
-            'Easting': 'EASTING',
-            'Northing': 'NORTHING',
-            'Ellips': 'ELLIPSOID HEIGHT',
-            'Omega': 'OMEGA',
-            'Phi': 'PHI',
-            'Kappa': 'KAPPA'
-        })
+        """
+        Defines the mapping from the output CSV column header names to appropriate
+            Pandas dataframe column name.
+        """
+        return OrderedDict(
+            {
+                "CIR_Filename": "CIR_Filename",
+                "Easting": "EASTING",
+                "Northing": "NORTHING",
+                "Ellips": "ELLIPSOID HEIGHT",
+                "Omega": "OMEGA",
+                "Phi": "PHI",
+                "Kappa": "KAPPA",
+            }
+        )
 
 
 if __name__ == "__main__":
-    eos_file = '../sample_files/4/EoS.txt'
-    exif_file = '../sample_files/4/ExifLog.csv'
-    output_file = '../sample_files/4/eos_exif_joined.txt'
+    eos_file = "../sample_files/4/EoS.txt"
+    exif_file = "../sample_files/4/ExifLog.csv"
+    output_file = "../sample_files/4/eos_exif_joined.txt"
 
     ortho_renamer = UTMOrthoRenamer()
     ortho_renamer.join_eos_exif_and_write_output(eos_file, exif_file, output_file)
