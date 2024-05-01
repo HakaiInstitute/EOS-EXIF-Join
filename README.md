@@ -2,13 +2,15 @@
 
 Application to join EOS and EXIF data files for image processing
 
-UI made with PyQt5 v5.14.1
-exe generated using Pyinstaller 3.4
+UI made with PyQt6
+exe generated using Pyinstaller
 
 ## Installation
 
+Install the poetry package manager then:
+
 ```sh
-pip install -r requirements.txt
+poetry install
 ```
 
 ## Running
@@ -16,15 +18,10 @@ pip install -r requirements.txt
 Use join_data.exe or
 
 ```sh
-python join_data.py
+poetry run python -m gui
 ```
 
-## Tests
+## Building
 
-The test.py file runs tests on sample input files stored in the sample_files folder.
-
-It looks for one CSV and one txt file in each folder
-
-```sh
-python test.py
-```
+Builds are done automatically with GitHub Actions when pushing a tag with a semantic
+version formats like `vN.N.N` or `vN.N.N-rcN`
