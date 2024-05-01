@@ -6,7 +6,7 @@
       <excludeFolder url="file://$MODULE_DIR$/dist" />
       <excludeFolder url="file://$MODULE_DIR$/join_eos_exif.egg-info" />
     </content>
-    <orderEntry type="jdk" jdkName="Poetry (join-eos-exif)" jdkType="Python SDK" />
+    <orderEntry type="jdk" jdkName="Poetry (EOS-EXIF-Join)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PyDocumentationSettings">
