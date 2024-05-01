@@ -21,17 +21,17 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - name: Set up Python 3.9
+      - name: Set up Python 3.10
         uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: "3.10"
 
       - name: Setup Poetry
-        uses: abatilo/actions-poetry@v2.0.0
+        uses: abatilo/actions-poetry@v3.0.0
         with:
-          poetry-version: 1.2.2
+          poetry-version: 1.8.2
 
       - name: Install dependencies
         run: |
@@ -49,6 +49,7 @@ jobs:
           --icon='gui\resources\logo.ico'
           --add-data='gui\resources\*.ico;resources'
           --add-data="gui\resources\*.ui;resources"
+          --name=EOS-EXIF-Join-${{ env.tag }}-win64
           gui/__main__.py
 
       - name: Build Linux GUI Executable
@@ -60,11 +61,11 @@ jobs:
           --icon='gui/resources/logo.ico'
           --add-data='gui/resources/*.ico:resources'
           --add-data="gui/resources/*.ui:resources"
+          --name=EOS-EXIF-Join-${{ env.tag }}-linux
           gui/__main__.py
 
-
       - name: Archive release artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.os }}-dist
           path: dist
@@ -75,7 +76,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Get tag
         id: tag
@@ -92,44 +93,26 @@ jobs:
           fi
 
       - name: Download Windows artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: windows-latest-dist
           path: win64-dist
 
       - name: Download Ubuntu artifacts
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: ubuntu-latest-dist
           path: linux-dist
 
       - name: Create Release
         id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v2
         with:
+          token: ${{ secrets.GITHUB_TOKEN }}
           tag_name: ${{ env.tag }}
-          release_name: ${{ env.tag }}
           draft: false
           prerelease: ${{ env.prerelease }}
-
-      - name: Upload Windows GUI assets
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: win64-dist/__main__.exe
-          asset_name: EOS-EXIF-Join-${{ env.tag }}-win64.exe
-          asset_content_type: application/octet-stream
-
-      - name: Upload Ubuntu GUI assets
-        uses: actions/upload-release-asset@v1.0.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: linux-dist/__main__
-          asset_name: EOS-EXIF-Join-${{ env.tag }}-linux
-          asset_content_type: application/octet-stream
+          generate_release_notes: true
+          files: |
+            win64-dist/EOS-EXIF-Join-${{ env.tag }}-win64.exe
+            linux-dist/EOS-EXIF-Join-${{ env.tag }}-linux
