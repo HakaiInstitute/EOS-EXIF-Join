@@ -40,6 +40,11 @@ jobs:
           poetry run pip install --upgrade pip
           poetry run pip install --upgrade setuptools
 
+      - name: Get tag
+        id: tag
+        run: |
+          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
       - name: Build Windows GUI Executable
         if: ${{ runner.os == 'Windows' }}
         run: >
