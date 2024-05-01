@@ -9,8 +9,9 @@ logger = logging.getLogger(__name__)
 
 
 class OrthoRenamer(ABC):
-    def __init__(self, verbose=True):
+    def __init__(self, out_suffix="_rgbi.tif", verbose=True):
         super().__init__()
+        self.out_suffix = out_suffix
         self.verbose = verbose
         self.errors = []  # list of filenames that can not be matched.
 
@@ -91,7 +92,7 @@ class OrthoRenamer(ABC):
         joined = pd.merge(eos, exif, left_on="# EVENT", right_on="GPS Event")
 
         # Create updated filename column
-        joined["CIR_Filename"] = joined["Filename"].str[:-4] + "_rgbi.tif"
+        joined["CIR_Filename"] = joined["Filename"].str.replace(".IIQ", self.out_suffix)
 
         # Populate the errors list
         unmatched_exif = exif[(~exif["Filename"].isin(joined["Filename"]))]

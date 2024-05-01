@@ -67,6 +67,10 @@ class JoinDataForm(QtWidgets.QWidget):
         return str(self.combo_coord_type.currentText())
 
     @property
+    def rgb_imagery(self):
+        return self.radio_rgb.isChecked()
+
+    @property
     def orthometric_heights(self):
         return self.radio_orthometric.isChecked()
 
@@ -107,14 +111,15 @@ class JoinDataForm(QtWidgets.QWidget):
 
     @property
     def joiner(self):
+        out_suffix = "_cal.tif" if self.rgb_imagery else "_rgbi.tif"
         if self.coord_type == "UTM" and self.orthometric_heights:
-            return UTMOrthoRenamer()
+            return UTMOrthoRenamer(out_suffix=out_suffix)
         elif self.coord_type == "UTM":
-            return UTMEllipsRenamer()
+            return UTMEllipsRenamer(out_suffix=out_suffix)
         elif self.coord_type == "Geographic" and self.orthometric_heights:
-            return GeographicOrthoRenamer()
+            return GeographicOrthoRenamer(out_suffix=out_suffix)
         elif self.coord_type == "Geographic":
-            return GeographicEllipsRenamer()
+            return GeographicEllipsRenamer(out_suffix=out_suffix)
         else:
             raise RuntimeError("coord_type error")
 
