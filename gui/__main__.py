@@ -6,7 +6,7 @@ from os import chdir, path
 from PyQt6 import QtWidgets, uic
 from PyQt6.QtGui import QIcon, QTextCursor
 
-from join_eos_exif.OrthoRenamer import (
+from join_eos_exif.ortho_renamer import (
     GeographicEllipsRenamer,
     GeographicOrthoRenamer,
     UTMEllipsRenamer,
@@ -77,7 +77,7 @@ class JoinDataForm(QtWidgets.QWidget):
     @staticmethod
     def write_list(list_item):
         with open("log.txt", "w") as list_export:
-            list_export.writelines("%s\n" % x for x in list_item)
+            list_export.writelines(f"{x}\n" for x in list_item)
 
     def update_log(self, text):
         self.log_view.insertPlainText(text + "\n")
@@ -89,14 +89,14 @@ class JoinDataForm(QtWidgets.QWidget):
         )
 
         chdir(path.dirname(path.abspath(self.eos_path)))
-        self.update_log("EOS file loaded: %s" % self.eos_path)
+        self.update_log(f"EOS file loaded: {self.eos_path}")
 
     def get_exif_filepath(self):
         self.exif_path, _ = QtWidgets.QFileDialog.getOpenFileName(
             self, "Select file to open...", "", ".csv(*.csv)"
         )
 
-        self.update_log("EXIF file loaded: %s" % self.exif_path)
+        self.update_log(f"EXIF file loaded: {self.exif_path}")
 
     def get_save_filepath(self):
         self.save_path, _ = QtWidgets.QFileDialog.getSaveFileName(
@@ -140,7 +140,7 @@ class JoinDataForm(QtWidgets.QWidget):
             self.update_log(out)
             self.update_log(f"File saved to {self.save_path}")
 
-        except Exception as e:
+        except (OSError, KeyError, ValueError, RuntimeError) as e:
             self.update_log(str(e))
 
 

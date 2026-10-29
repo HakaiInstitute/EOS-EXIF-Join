@@ -7,10 +7,10 @@ exe generated using Pyinstaller
 
 ## Installation
 
-Install the poetry package manager then:
+Install the [uv](https://docs.astral.sh/uv/) package manager then:
 
 ```sh
-poetry install
+uv sync
 ```
 
 ## Running
@@ -18,7 +18,15 @@ poetry install
 Use join_data.exe or
 
 ```sh
-poetry run python -m gui
+uv run python -m gui
+```
+
+## Development
+
+Git hooks are managed with [prek](https://prek.j178.dev). Install them with:
+
+```sh
+uv run prek install
 ```
 
 ## Building

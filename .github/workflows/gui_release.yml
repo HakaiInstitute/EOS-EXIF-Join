@@ -8,11 +8,13 @@ on:
       - 'v[0-9]+.[0-9]+.[0-9]+'
       - 'v[0-9]+.[0-9]+.[0-9]+rc[0-9]+'
 
+permissions: {}
+
 jobs:
   build-binaries:
     defaults:
       run:
-        shell: bash -l {0}
+        shell: bash
 
     strategy:
       matrix:
@@ -20,57 +22,49 @@ jobs:
 
     runs-on: ${{ matrix.os }}
 
+    permissions:
+      contents: read
+
     steps:
-      - uses: actions/checkout@v4
-
-      - name: Set up Python 3.10
-        uses: actions/setup-python@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          python-version: "3.10"
+          persist-credentials: false
 
-      - name: Setup Poetry
-        uses: abatilo/actions-poetry@v3.0.0
+      - name: Set up uv and Python 3.14
+        uses: astral-sh/setup-uv@68559e99cc807c1eb7e9238fd43a15bba460eec2 # v10.3.3
         with:
-          poetry-version: 1.8.2
+          python-version: "3.14"
+          enable-cache: false
 
       - name: Install dependencies
-        run: |
-          poetry update
-          poetry version ${{ env.tag }}
-          poetry run pip install --upgrade pip
-          poetry run pip install --upgrade setuptools
-
-      - name: Get tag
-        id: tag
-        run: |
-          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+        run: uv sync --locked
 
       - name: Build Windows GUI Executable
         if: ${{ runner.os == 'Windows' }}
         run: >
-          poetry run pyinstaller
+          uv run pyinstaller
           --onefile
           --windowed
           --icon='gui\resources\logo.ico'
           --add-data='gui\resources\*.ico;resources'
           --add-data="gui\resources\*.ui;resources"
-          --name=EOS-EXIF-Join-${{ env.tag }}-win64
+          --name="EOS-EXIF-Join-${GITHUB_REF_NAME}-win64"
           gui/__main__.py
 
       - name: Build Linux GUI Executable
         if: ${{ runner.os == 'Linux' }}
         run: >
-          poetry run pyinstaller
+          uv run pyinstaller
           --onefile
           --windowed
           --icon='gui/resources/logo.ico'
           --add-data='gui/resources/*.ico:resources'
           --add-data="gui/resources/*.ui:resources"
-          --name=EOS-EXIF-Join-${{ env.tag }}-linux
+          --name="EOS-EXIF-Join-${GITHUB_REF_NAME}-linux"
           gui/__main__.py
 
       - name: Archive release artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: ${{ matrix.os }}-dist
           path: dist
@@ -79,45 +73,33 @@ jobs:
     needs: build-binaries
     runs-on: ubuntu-latest
 
+    permissions:
+      contents: write
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Get tag
-        id: tag
-        run: |
-          echo "tag=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
-
-      - name: Detect prerelease
-        id: prerelease
-        run: |
-          if echo ${{ env.tag }} | grep -qe '?*.*.*rc*'; then
-              echo "prerelease=true" >> $GITHUB_ENV
-          else
-              echo "prerelease=false" >> $GITHUB_ENV
-          fi
-
       - name: Download Windows artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: windows-latest-dist
           path: win64-dist
 
       - name: Download Ubuntu artifacts
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
         with:
           name: ubuntu-latest-dist
           path: linux-dist
 
       - name: Create Release
-        id: create_release
-        uses: softprops/action-gh-release@v2
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          tag_name: ${{ env.tag }}
-          draft: false
-          prerelease: ${{ env.prerelease }}
-          generate_release_notes: true
-          files: |
-            win64-dist/EOS-EXIF-Join-${{ env.tag }}-win64.exe
-            linux-dist/EOS-EXIF-Join-${{ env.tag }}-linux
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          prerelease=()
+          if [[ "$GITHUB_REF_NAME" == *rc* ]]; then
+            prerelease=(--prerelease)
+          fi
+          gh release create "$GITHUB_REF_NAME" \
+            --repo "$GITHUB_REPOSITORY" \
+            --generate-notes \
+            "${prerelease[@]}" \
+            "win64-dist/EOS-EXIF-Join-${GITHUB_REF_NAME}-win64.exe" \
+            "linux-dist/EOS-EXIF-Join-${GITHUB_REF_NAME}-linux"
